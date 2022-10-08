@@ -38,6 +38,7 @@ dependencies:
   json_serializable: ^6.5.0
   build_runner: ^2.2.1
   json_annotation: ^4.7.0
+  duration_picker: ^1.0.1
 
 dev_dependencies:
   flutter_test:

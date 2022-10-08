@@ -5,8 +5,8 @@ import 'package:szb_mobile/medicine/list.dart';
 
 class Home extends StatelessWidget {
   static final routes = [
-    NamedRoute("Ciśnienie", (_) => const AddPressure()),
-    NamedRoute("Aktynwość", (_) => const AddActivity()),
+    NamedRoute("Ciśnienie", (_) => const Pressures()),
+    NamedRoute("Aktynwość", (_) => const Activities()),
     NamedRoute("Leki", (_) => const MedicineList()),
   ];
 
