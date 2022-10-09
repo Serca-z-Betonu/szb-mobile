@@ -7,11 +7,11 @@ part of 'dose.dart';
 // **************************************************************************
 
 Dose _$DoseFromJson(Map<String, dynamic> json) => Dose(
-      json['name'] as String,
-      json['amount'] as int,
+      json['drug_name'] as String,
+      (json['expected_daily_dosage'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$DoseToJson(Dose instance) => <String, dynamic>{
-      'name': instance.name,
-      'amount': instance.amount,
+      'drug_name': instance.name,
+      'expected_daily_dosage': instance.amount,
     };

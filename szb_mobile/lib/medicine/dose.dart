@@ -5,8 +5,10 @@ part 'dose.g.dart';
 
 @JsonSerializable()
 class Dose {
+  @JsonKey(name: "drug_name")
   final String name;
-  final int amount;
+  @JsonKey(name: "expected_daily_dosage")
+  final double amount;
 
   const Dose(this.name, this.amount);
 
@@ -21,19 +23,66 @@ class Dose {
 
 class DoseRow extends StatelessWidget {
   final Dose dose;
+  final void Function() remove;
 
-  const DoseRow(this.dose, {super.key});
+  const DoseRow(this.dose, this.remove, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [Text("$dose"), const TakenButton()],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SizedBox(
+              width: 200,
+              child: Text(
+                dose.toString(),
+                style: const TextStyle(fontSize: 20),
+              )),
+          TakenButton(remove)
+        ],
+      ),
+    );
+  }
+}
+
+class DoneDoseRow extends StatelessWidget {
+  final Dose dose;
+
+  const DoneDoseRow(this.dose, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SizedBox(
+              width: 200,
+              child: Text(
+                dose.toString(),
+                style: const TextStyle(fontSize: 20),
+              )),
+          Container(
+              alignment: Alignment.center,
+              height: 30,
+              width: 80,
+              child: const Icon(
+                Icons.favorite,
+                color: Colors.red,
+              ))
+        ],
+      ),
     );
   }
 }
 
 class TakenButton extends StatefulWidget {
-  const TakenButton({super.key});
+  final void Function() remove;
+
+  const TakenButton(this.remove, {super.key});
 
   @override
   State<TakenButton> createState() => _TakenButtonState();
@@ -46,14 +95,19 @@ class _TakenButtonState extends State<TakenButton> {
     setState(() => showHeart = true);
   }
 
+  void onHeartAnimationEnd() {
+    widget.remove();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 100,
-        height: 100,
         alignment: Alignment.center,
-        child:
-            showHeart ? const Heart() : TakenButtonBody(onButtonAnimationEnd));
+        height: 30,
+        width: 80,
+        child: showHeart
+            ? Heart(onHeartAnimationEnd)
+            : TakenButtonBody(onButtonAnimationEnd));
   }
 }
 
@@ -127,7 +181,9 @@ class _TakenButtonBodyState extends State<TakenButtonBody>
 }
 
 class Heart extends StatefulWidget {
-  const Heart({super.key});
+  final void Function() onEnd;
+
+  const Heart(this.onEnd, {super.key});
 
   @override
   State<Heart> createState() => _HeartState();
@@ -143,7 +199,7 @@ class _HeartState extends State<Heart> with TickerProviderStateMixin {
 
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 100))
-      ..forward();
+      ..forward().then((_) => widget.onEnd());
 
     scale = Tween(begin: 0.0, end: 1.0).animate(_controller);
   }
@@ -152,8 +208,12 @@ class _HeartState extends State<Heart> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
         animation: _controller,
-        builder: (context, child) =>
-            Transform.scale(scale: scale.value, child: const Icon(Icons.home)));
+        builder: (context, child) => Transform.scale(
+            scale: scale.value,
+            child: const Icon(
+              Icons.favorite,
+              color: Colors.red,
+            )));
   }
 
   @override

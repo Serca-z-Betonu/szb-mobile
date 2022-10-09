@@ -7,13 +7,13 @@ part of 'activity.dart';
 // **************************************************************************
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
-      json['name'] as String,
-      DateTime.parse(json['time'] as String),
-      Duration(microseconds: json['duration'] as int),
+      json['description'] as String,
+      DateTime.parse(json['end_timestamp'] as String),
+      Duration(microseconds: json['duration_us'] as int),
     );
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
-      'name': instance.name,
-      'time': instance.time.toIso8601String(),
-      'duration': instance.duration.inMicroseconds,
+      'description': instance.name,
+      'end_timestamp': instance.time.toIso8601String(),
+      'duration_us': instance.duration.inMicroseconds,
     };

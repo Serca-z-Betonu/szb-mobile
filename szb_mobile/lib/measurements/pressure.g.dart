@@ -7,8 +7,8 @@ part of 'pressure.dart';
 // **************************************************************************
 
 Pressure _$PressureFromJson(Map<String, dynamic> json) => Pressure(
-      json['low'] as int,
-      json['high'] as int,
+      (json['low'] as num).toDouble(),
+      (json['high'] as num).toDouble(),
       DateTime.parse(json['time'] as String),
     );
 
